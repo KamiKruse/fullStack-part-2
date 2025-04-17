@@ -3,7 +3,12 @@ const Content = (props) => {
   return (
     <div>
       {props.part.map((part) => (
-        <Part part={part.name} exercise={part.exercises} />
+        <Part
+          key={part.id}
+          id={part.id}
+          part={part.name}
+          exercise={part.exercises}
+        />
       ))}
     </div>
   );
