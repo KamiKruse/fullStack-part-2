@@ -1,14 +1,23 @@
 import Header from "./Header";
 import Content from "./Content";
 import Total from "./Total";
-const Course = (props) => {
-     
+const Courses = (props) => {
   return (
     <>
-      <Header name={props.course.name} />
-      <Content part={props.course.parts}/>
-      <Total total={props.course} />
+      {props.courses.map((course) => {
+        return (
+          <>
+            <Header name={course.name} />
+            <Content part={course.parts} />
+            <Total total={course.parts} />
+          </>
+        );
+      })}
+
+      {/* {props.courses.map((course) => (
+        <Total total={course.courses} />
+      ))} */}
     </>
   );
 };
-export default Course;
+export default Courses;
