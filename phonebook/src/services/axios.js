@@ -16,8 +16,14 @@ const delReq = (id)=>{
     return request.then(() => id);
 }
 
+const updateReq = (id, obj)=>{
+    const request = axios.put(`${baseUrl}/${id}`, obj);
+    return request.then(response => response.data)
+}
+
 export default {
   getReq,
   postReq,
-  delReq
+  delReq,
+  updateReq
 };

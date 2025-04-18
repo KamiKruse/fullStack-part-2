@@ -16,13 +16,33 @@ const App = () => {
 
   const handleClick = (e) => {
     e.preventDefault();
-    let test = persons.filter((person) => {
+    const test = persons.filter((person) => {
       return person.name === newName;
     });
-    if (test.length > 0) {
+    if (test.length > 0 && !newPhone) {
       alert(`${newName} is already added in the phonebook`);
       setNewName("");
       setNewPhone("");
+    } else if (test.length > 0 && newPhone) {
+      const name = test[0].name;
+      const id = test[0].id;
+      if (
+        window.confirm(
+          `${name} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        const updatedObj = { ...test[0], number: newPhone };
+        console.log("updateObj: ", updatedObj, "id: ", id);
+        networkCalls.updateReq(id, updatedObj).then((updatedResponse) => {
+          console.log("updatedResponse: ", updatedResponse);
+          setPersons((prevPersons) =>
+            prevPersons.map((person) =>
+              person.id === id ? updatedResponse : person
+            )
+          );
+        });
+        console.log(persons);
+      }
     } else {
       const obj = {
         name: newName,
@@ -93,6 +113,7 @@ const App = () => {
         handleClick={handleClick}
       />
       <h2>Numbers</h2>
+      {console.log(persons)}
       <Display persons={persons} filter={filter} handleDelete={handleDelete} />
     </div>
   );
