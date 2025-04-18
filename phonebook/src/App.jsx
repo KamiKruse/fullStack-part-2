@@ -60,14 +60,6 @@ const App = () => {
       />
       <h2>Numbers</h2>
       <Display persons={persons} filter={filter} />
-      {/* {persons.map(
-        (person) =>
-          person.name.toLowerCase().includes(filter.toLowerCase()) && (
-            <li key={person.id} style={{ listStyle: "none" }}>
-              {person.name} {person.number}
-            </li>
-          )
-      )} */}
     </div>
   );
 };
