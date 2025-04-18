@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import networkCalls from "./services/axios";
 import Form from "./Form";
 import Filter from "./Filter";
 import Display from "./Display";
@@ -11,9 +11,7 @@ const App = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then((response) => setPersons(response.data));
+    networkCalls.getReq().then((initialData) => setPersons(initialData));
   }, []);
 
   const handleClick = (e) => {
@@ -31,10 +29,10 @@ const App = () => {
         number: newPhone,
         id: persons[persons.length - 1].id + 1,
       };
-      axios
-        .post("http://localhost:3001/persons/", obj)
-        .then((response) =>
-          setPersons((prevPersons) => [...prevPersons, response.data])
+      networkCalls
+        .postReq(obj)
+        .then((updatedData) =>
+          setPersons((prevPersons) => [...prevPersons, updatedData])
         );
       setNewName("");
       setNewPhone("");
