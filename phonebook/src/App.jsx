@@ -2,10 +2,15 @@ import { useState } from "react";
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: "Arto Hellas", phone: "040-1234567" },
+    { name: "Arto Hellas", number: "040-123456", id: 1 },
+    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
+    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
+    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
   ]);
+
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
+  const [filter, setFilter] = useState("");
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -29,13 +34,38 @@ const App = () => {
   const handleNameChange = (e) => {
     setNewName(e.target.value);
   };
+
   const handlePhoneChange = (e) => {
     setNewPhone(e.target.value);
+  };
+
+  const handleFilter = (e) => {
+    // setPersons((prevPersons) => {
+    //   return prevPersons.map((person) => {
+    //     return person.name.toLowerCase() === filter.toLowerCase()
+    //       ? person
+    //       : "Person does not exist";
+    //   });
+    // });
+    setFilter(e.target.value);
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        <label htmlFor="filter">
+          filter shown with
+          <input
+            type="text"
+            id="filter"
+            name="filter"
+            value={filter}
+            onChange={handleFilter}
+          />
+        </label>
+      </div>
+      <h2>add a new</h2>
       <form>
         <div>
           name: <input value={newName} onChange={handleNameChange} />
@@ -50,12 +80,14 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-
-      {persons.map((person) => (
-        <li key={person.name} style={{ listStyle: "none" }}>
-          {person.name} {person.phone}
-        </li>
-      ))}
+      {persons.map(
+        (person) =>
+          person.name.toLowerCase().includes(filter.toLowerCase()) && (
+            <li key={person.id} style={{ listStyle: "none" }}>
+              {person.name} {person.number}
+            </li>
+          )
+      )}
     </div>
   );
 };
