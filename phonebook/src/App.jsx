@@ -26,10 +26,16 @@ const App = () => {
       setNewName("");
       setNewPhone("");
     } else {
-      setPersons((prevPersons) => [
-        ...prevPersons,
-        { name: newName, number: newPhone, id: prevPersons.id + 1 },
-      ]);
+      const obj = {
+        name: newName,
+        number: newPhone,
+        id: persons[persons.length - 1].id + 1,
+      };
+      axios
+        .post("http://localhost:3001/persons/", obj)
+        .then((response) =>
+          setPersons((prevPersons) => [...prevPersons, response.data])
+        );
       setNewName("");
       setNewPhone("");
     }
