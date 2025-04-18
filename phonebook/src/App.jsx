@@ -40,13 +40,6 @@ const App = () => {
   };
 
   const handleFilter = (e) => {
-    // setPersons((prevPersons) => {
-    //   return prevPersons.map((person) => {
-    //     return person.name.toLowerCase() === filter.toLowerCase()
-    //       ? person
-    //       : "Person does not exist";
-    //   });
-    // });
     setFilter(e.target.value);
   };
 
