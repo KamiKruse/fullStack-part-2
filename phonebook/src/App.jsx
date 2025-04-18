@@ -51,6 +51,35 @@ const App = () => {
     setFilter(e.target.value);
   };
 
+  const handleDelete = (id) => {
+    if (
+      window.confirm(`Are you sure you want to delete the entry with ID ${id}?`)
+    ) {
+      networkCalls
+        .delReq(id)
+        .then((delId) => {
+          setPersons((prevPersons) =>
+            prevPersons.filter((person) => person.id !== delId)
+          );
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 404) {
+            setPersons((prevPersons) =>
+              prevPersons.filter((person) => person.id !== id)
+            );
+          } else {
+            alert(
+              `An error occurred while deleting: ${
+                error.message || "Unknown error"
+              }`
+            );
+          }
+        });
+    } else {
+      console.log(`Deletion cancelled for ID: ${id}`);
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -64,7 +93,7 @@ const App = () => {
         handleClick={handleClick}
       />
       <h2>Numbers</h2>
-      <Display persons={persons} filter={filter} />
+      <Display persons={persons} filter={filter} handleDelete={handleDelete} />
     </div>
   );
 };

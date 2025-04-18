@@ -11,7 +11,13 @@ const postReq = (obj) => {
   return request.then((response) => response.data);
 };
 
+const delReq = (id)=>{
+    const request = axios.delete(`${baseUrl}/${id}`)
+    return request.then(() => id);
+}
+
 export default {
   getReq,
   postReq,
+  delReq
 };

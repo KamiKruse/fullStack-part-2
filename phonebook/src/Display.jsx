@@ -8,6 +8,7 @@ const Display = (props) => {
           key={person.id}
           name={person.name}
           number={person.number}
+          handleDelete={props.handleDelete}
         />
       )
   );
