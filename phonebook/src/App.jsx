@@ -9,10 +9,19 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [filter, setFilter] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isPhoneUpdated, setIsPhoneUpdated] = useState(false);
 
   useEffect(() => {
     networkCalls.getReq().then((initialData) => setPersons(initialData));
   }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsSuccess(false);
+      setIsPhoneUpdated(false);
+    }, 3000);
+  }, [persons]);
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -32,22 +41,20 @@ const App = () => {
         )
       ) {
         const updatedObj = { ...test[0], number: newPhone };
-        console.log("updateObj: ", updatedObj, "id: ", id);
         networkCalls.updateReq(id, updatedObj).then((updatedResponse) => {
-          console.log("updatedResponse: ", updatedResponse);
           setPersons((prevPersons) =>
             prevPersons.map((person) =>
               person.id === id ? updatedResponse : person
             )
           );
         });
-        console.log(persons);
+        setIsPhoneUpdated((prev) => !prev);
       }
     } else {
       const obj = {
         name: newName,
         number: newPhone,
-        id: persons[persons.length - 1].id + 1,
+        id: String(Number(persons[persons.length - 1].id) + 1),
       };
       networkCalls
         .postReq(obj)
@@ -56,6 +63,7 @@ const App = () => {
         );
       setNewName("");
       setNewPhone("");
+      setIsSuccess((prev) => !prev);
     }
   };
 
@@ -103,6 +111,13 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      {isSuccess && !isPhoneUpdated ? (
+        <div className="success">Added {newName}</div>
+      ) : isPhoneUpdated ? (
+        <div className="success">
+          Updated {newName}'s number to {newPhone}
+        </div>
+      ) : null}
       <Filter filter={filter} handleFilter={handleFilter} />
       <h2>add a new</h2>
       <Form
@@ -113,7 +128,6 @@ const App = () => {
         handleClick={handleClick}
       />
       <h2>Numbers</h2>
-      {console.log(persons)}
       <Display persons={persons} filter={filter} handleDelete={handleDelete} />
     </div>
   );
