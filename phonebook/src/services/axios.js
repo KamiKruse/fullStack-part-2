@@ -5,6 +5,10 @@ const getReq = () => {
   const request = axios.get(baseUrl);
   return request.then((response) => response.data);
 };
+const getReqId = (id) => {
+  const request = axios.get(`${baseUrl}/${id}`);
+  return request.then((response) => response.data);
+};
 
 const postReq = (obj) => {
   const request = axios.post(baseUrl, obj);
@@ -25,5 +29,6 @@ export default {
   getReq,
   postReq,
   delReq,
-  updateReq
+  updateReq,
+  getReqId,
 };

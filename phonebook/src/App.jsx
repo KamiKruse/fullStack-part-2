@@ -3,6 +3,7 @@ import networkCalls from "./services/axios";
 import Form from "./Form";
 import Filter from "./Filter";
 import Display from "./Display";
+import Notification from "./Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,16 +12,23 @@ const App = () => {
   const [filter, setFilter] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isPhoneUpdated, setIsPhoneUpdated] = useState(false);
+  const [errorState, setErrorState] = useState(false);
 
   useEffect(() => {
     networkCalls.getReq().then((initialData) => setPersons(initialData));
   }, []);
 
   useEffect(() => {
+    if (errorState) {
+      setIsSuccess(false);
+      setIsPhoneUpdated(false);
+    }
     setTimeout(() => {
       setIsSuccess(false);
       setIsPhoneUpdated(false);
-    }, 3000);
+      setErrorState(false);
+    }, 6000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [persons]);
 
   const handleClick = (e) => {
@@ -41,13 +49,22 @@ const App = () => {
         )
       ) {
         const updatedObj = { ...test[0], number: newPhone };
-        networkCalls.updateReq(id, updatedObj).then((updatedResponse) => {
-          setPersons((prevPersons) =>
-            prevPersons.map((person) =>
-              person.id === id ? updatedResponse : person
-            )
-          );
-        });
+        networkCalls
+          .updateReq(id, updatedObj)
+          .then((updatedResponse) => {
+            setPersons((prevPersons) =>
+              prevPersons.map((person) =>
+                person.id === id ? updatedResponse : person
+              )
+            );
+          })
+          .catch(() => {
+            setIsSuccess(false);
+            setErrorState((prev) => !prev);
+            setPersons((prevPersons) =>
+              prevPersons.filter((person) => person.id !== id)
+            );
+          });
         setIsPhoneUpdated((prev) => !prev);
       }
     } else {
@@ -90,18 +107,11 @@ const App = () => {
             prevPersons.filter((person) => person.id !== delId)
           );
         })
-        .catch((error) => {
-          if (error.response && error.response.status === 404) {
-            setPersons((prevPersons) =>
-              prevPersons.filter((person) => person.id !== id)
-            );
-          } else {
-            alert(
-              `An error occurred while deleting: ${
-                error.message || "Unknown error"
-              }`
-            );
-          }
+        .catch(() => {
+          setErrorState((prev) => !prev);
+          setPersons((prevPersons) =>
+            prevPersons.filter((person) => person.id !== id)
+          );
         });
     } else {
       console.log(`Deletion cancelled for ID: ${id}`);
@@ -111,13 +121,13 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      {isSuccess && !isPhoneUpdated ? (
-        <div className="success">Added {newName}</div>
-      ) : isPhoneUpdated ? (
-        <div className="success">
-          Updated {newName}'s number to {newPhone}
-        </div>
-      ) : null}
+      <Notification
+        isSuccess={isSuccess}
+        newName={newName}
+        isPhoneUpdated={isPhoneUpdated}
+        newPhone={newPhone}
+        errorState={errorState}
+      />
       <Filter filter={filter} handleFilter={handleFilter} />
       <h2>add a new</h2>
       <Form
