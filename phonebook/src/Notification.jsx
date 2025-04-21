@@ -1,5 +1,4 @@
 const Notification = (props) => {
-  console.log(props.notifiedName);
   return (
     <>
       {props.isSuccess ? (

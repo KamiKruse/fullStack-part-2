@@ -93,7 +93,6 @@ const App = () => {
   };
 
   const handleDelete = (id) => {
-    console.log(id);
     if (
       window.confirm(`Are you sure you want to delete the entry with ID ${id}?`)
     ) {
