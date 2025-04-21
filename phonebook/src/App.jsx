@@ -13,23 +13,22 @@ const App = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isPhoneUpdated, setIsPhoneUpdated] = useState(false);
   const [errorState, setErrorState] = useState(false);
+  const [notifiedName, setNotifiedName] = useState("");
 
   useEffect(() => {
     networkCalls.getReq().then((initialData) => setPersons(initialData));
   }, []);
   useEffect(() => {
-    if (errorState) {
-      setIsSuccess(false);
-      setIsPhoneUpdated(false);
+    if (errorState || isSuccess || isPhoneUpdated) {
+      const timer = setTimeout(() => {
+        setIsSuccess(false);
+        setIsPhoneUpdated(false);
+        setErrorState(false);
+      }, 6000);
+
+      return () => clearTimeout(timer);
     }
-    setTimeout(() => {
-      setIsSuccess(false);
-      setIsPhoneUpdated(false);
-      setErrorState(false);
-    }, 6000);
-    
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [persons]);
+  }, [isSuccess, isPhoneUpdated, errorState]);
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -72,12 +71,9 @@ const App = () => {
         name: newName,
         number: newPhone,
       };
-      networkCalls
-        .postReq(obj)
-        .then((updatedData) =>
-          setPersons( updatedData)
-        );
-      
+      const addedName = newName;
+      networkCalls.postReq(obj).then((updatedData) => setPersons(updatedData));
+      setNotifiedName(addedName);
       setNewName("");
       setNewPhone("");
       setIsSuccess((prev) => !prev);
@@ -97,7 +93,7 @@ const App = () => {
   };
 
   const handleDelete = (id) => {
-    console.log(id)
+    console.log(id);
     if (
       window.confirm(`Are you sure you want to delete the entry with ID ${id}?`)
     ) {
@@ -118,13 +114,12 @@ const App = () => {
       console.log(`Deletion cancelled for ID: ${id}`);
     }
   };
-  console.log("after:",persons);
   return (
     <div>
       <h2>Phonebook</h2>
       <Notification
         isSuccess={isSuccess}
-        newName={newName}
+        notifiedName={notifiedName}
         isPhoneUpdated={isPhoneUpdated}
         newPhone={newPhone}
         errorState={errorState}

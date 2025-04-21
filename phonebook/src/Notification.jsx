@@ -1,15 +1,16 @@
 const Notification = (props) => {
+  console.log(props.notifiedName);
   return (
     <>
       {props.isSuccess ? (
-        <div className="success">Added {props.newName}</div>
+        <div className="success">Added {props.notifiedName}</div>
       ) : props.isPhoneUpdated ? (
         <div className="success">
-          Updated {props.newName}'s number to {props.newPhone}
+          Updated {props.notifiedName}'s number to {props.newPhone}
         </div>
       ) : props.errorState ? (
         <div className="error">
-          Information of {props.newName} has already been removed from the
+          Information of {props.notifiedName} has already been removed from the
           server
         </div>
       ) : null}
