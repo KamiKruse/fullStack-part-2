@@ -17,7 +17,6 @@ const App = () => {
   useEffect(() => {
     networkCalls.getReq().then((initialData) => setPersons(initialData));
   }, []);
-
   useEffect(() => {
     if (errorState) {
       setIsSuccess(false);
@@ -28,6 +27,7 @@ const App = () => {
       setIsPhoneUpdated(false);
       setErrorState(false);
     }, 6000);
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [persons]);
 
@@ -71,13 +71,13 @@ const App = () => {
       const obj = {
         name: newName,
         number: newPhone,
-        id: String(Number(persons[persons.length - 1].id) + 1),
       };
       networkCalls
         .postReq(obj)
         .then((updatedData) =>
-          setPersons((prevPersons) => [...prevPersons, updatedData])
+          setPersons( updatedData)
         );
+      
       setNewName("");
       setNewPhone("");
       setIsSuccess((prev) => !prev);
@@ -97,6 +97,7 @@ const App = () => {
   };
 
   const handleDelete = (id) => {
+    console.log(id)
     if (
       window.confirm(`Are you sure you want to delete the entry with ID ${id}?`)
     ) {
@@ -117,7 +118,7 @@ const App = () => {
       console.log(`Deletion cancelled for ID: ${id}`);
     }
   };
-
+  console.log("after:",persons);
   return (
     <div>
       <h2>Phonebook</h2>
