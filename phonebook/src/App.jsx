@@ -72,7 +72,9 @@ const App = () => {
         number: newPhone,
       };
       const addedName = newName;
-      networkCalls.postReq(obj).then((updatedData) => setPersons(updatedData));
+      networkCalls.postReq(obj).then((updatedData) => {
+        setPersons(prev => [...prev, updatedData]);
+      });
       setNotifiedName(addedName);
       setNewName("");
       setNewPhone("");

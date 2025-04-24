@@ -1,5 +1,6 @@
 import List from "./List.jsx";
 const Display = (props) => {
+  console.log(props.persons)
   const filtered = props.persons.map((person) => {
     const filteredName =
       props.filter.length !== 0 &&
