@@ -71,10 +71,17 @@ const App = () => {
         name: newName,
         number: newPhone,
       };
-      const addedName = newName;
-      networkCalls.postReq(obj).then((updatedData) => {
-        setPersons(prev => [...prev, updatedData]);
-      });
+      let addedName = newName;
+      networkCalls
+        .postReq(obj)
+        .then((updatedData) => {
+          setPersons((prev) => [...prev, updatedData]);
+        })
+        .catch((error) => {
+          setIsSuccess(false);
+          setErrorState((prev) => !prev);
+          setNotifiedName(error.response.data.error);
+        });
       setNotifiedName(addedName);
       setNewName("");
       setNewPhone("");
