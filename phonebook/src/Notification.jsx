@@ -9,7 +9,8 @@ const Notification = (props) => {
         </div>
       ) : props.errorState ? (
         <div className="error">
-          {props.notifiedName.startsWith("Entry")
+          {props.notifiedName.startsWith("Entry") ||
+          props.notifiedName.includes("ValidationError")
             ? props.notifiedName
             : `Information of ${props.notifiedName} has already been removed from the
           server`}
